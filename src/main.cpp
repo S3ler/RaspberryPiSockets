@@ -78,7 +78,7 @@ void setup() {
 #endif
 
     manager.setThisAddress(OWN_ADDRESS);
-    socket.setRf95(&rf95);
+    //socket.setRf95(&rf95);
     socket.setManager(&manager);
     socket.setLogger(&logger);
     socket.setMqttSnMessageHandler(&mqttSnMessageHandler);

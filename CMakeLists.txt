@@ -9,6 +9,7 @@ add_definitions(-DPING)
 include_directories(lib/mqtt-sn-sockets)
 include_directories(lib/mqtt-sn-sockets/lib)
 include_directories(lib/mqtt-sn-sockets/lib/arduino-linux-abstraction/src)
+add_subdirectory(lib/mqtt-sn-sockets/lib/arduino-linux-abstraction/)
 include_directories(lib/mqtt-sn-sockets/RadioHeadRpi)
 add_subdirectory(lib/mqtt-sn-sockets)
 

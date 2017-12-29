@@ -5,7 +5,7 @@
 #include <ESP8266WiFi.h>
 #endif
 
-#include <Arduino.h>
+//#include <Arduino.h>
 
 #ifdef Arduino_h
 
@@ -28,11 +28,11 @@
 #endif
 
 #include <RF95Socket.h>
-#include <SimpleMqttSnClientTester.h>
+//#include <SimpleMqttSnClientTester.h>
 
-#include <LinuxLogger.h>
+//#include <LinuxLogger.h>
 #include <MqttSnMessageHandler.h>
-#include <LinuxLogger.h>
+//#include <LinuxLogger.h>
 #include <RF95Socket.h>
 #include <RHReliableDatagram.h>
 #if defined(DRIVER_RH_RF95)
@@ -82,8 +82,8 @@ RH_NRF24 rh_driver(RPI_V2_GPIO_P1_18, RPI_V2_GPIO_P1_24);
 
 RHReliableDatagram manager(rh_driver);
 
-#if !defined(Arduino_h)
-SerialLinux Serial;
+#if !defined(Arduino_h) && !defined(RASPI_h)
+//SerialLinux Serial;
 #endif
 #ifdef PING
 #define OWN_ADDRESS 0x05
@@ -96,51 +96,59 @@ uint8_t msg[] = {5, 'P', 'i', 'n', 'g'};
 
 
 void setup() {
-    Serial.begin(9600);
-    Serial.println("Starting");
-    Serial.print("OWN_ADDRESS: ");
+    //Serial.begin(9600);
+    logger.start_log("Starting", 1);
+    //Serial.println("Starting");
+    logger.start_log("OWN_ADDRESS: ", 1);
+    //Serial.print("OWN_ADDRESS: ");
 #ifndef Arduino_h
     std::string number_str = std::to_string(OWN_ADDRESS);
-    Serial.println(number_str.c_str());
+    logger.start_log(number_str.c_str(), 1);
+    //Serial.println(number_str.c_str());
 #else
     Serial.println(OWN_ADDRESS);
 #endif
-    Serial.print("ROLE: ");
+   logger.start_log("ROLE: ", 1);
+    //Serial.print("ROLE: ");
 #ifdef PING
-    Serial.println("PING");
-#elif PONG
-    Serial.println("PONG");
+    logger.append_log("PING");
+    //Serial.println("PING");
+#elif defined(PONG)
+    logger.append_log("PING");
+    //Serial.println("PONG");
 #else
     Serial.println("UNDEFINED");
 #endif
 
 #ifdef DRIVER_RH_RF95
     if(!wiringPiSetupGpio()){
-        Serial.println("Done init wiringPiSetupGpio");
+        //Serial.println("Done init wiringPiSetupGpio");
     }
     // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
     if (!rh_driver.init()) {
-        Serial.println("Failure init DRIVER_RH_RF95");
+        logger.start_log("Failure init DRIVER_RH_RF95", 1);
+        //Serial.println("Failure init DRIVER_RH_RF95");
     }
 
 #ifdef FREQUENCY
     if (!rh_driver.setFrequency(FREQUENCY)) {
-        Serial.println("Failure set FREQUENCY");
+        logger.start_log("Failure init FREQUENCY", 1);
+        //Serial.println("Failure set FREQUENCY");
     }
-    Serial.println("FREQUENCY");
+    //Serial.println("FREQUENCY");
 #endif
 
 #ifdef TX_POWER_PIN
     if(!rh_driver.setTxPower(18, false)){
-        Serial.println("Failure set TX_POWER_PIN");
+        //Serial.println("Failure set TX_POWER_PIN");
     }
 #endif
 
 #ifdef MODEM_CONFIG_CHOICE
     if(!rh_driver.setModemConfig(RH_RF95::MODEM_CONFIG_CHOICE)){
-        Serial.println("Failure set MODEM_CONFIG_CHOICE");
+        //Serial.println("Failure set MODEM_CONFIG_CHOICE");
     }
-    Serial.println("MODEM_CONFIG_CHOICE");
+    //Serial.println("MODEM_CONFIG_CHOICE");
 #endif
 #endif
 #ifdef DRIVER_RH_NRF24
@@ -163,9 +171,10 @@ void setup() {
     mqttSnMessageHandler.setLogger(&logger);
     mqttSnMessageHandler.setSocket(&socket);
     if (!mqttSnMessageHandler.begin()) {
-        Serial.println("Failure init MqttSnMessageHandler");
+        //Serial.println("Failure init MqttSnMessageHandler");
     } else {
-        Serial.println("Started");
+	logger.start_log("Started", 1);
+        //Serial.println("Started");
     }
 #ifdef PING
 

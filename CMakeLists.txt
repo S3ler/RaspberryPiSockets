@@ -3,19 +3,25 @@ project(RaspberryPiSockets)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_definitions(-DRH_PLATFORM=RH_PLATFORM_RP -D__RASPBERRY_PI_)
-add_definitions(-DPING)
+add_definitions(-DRH_PLATFORM=RH_PLATFORM_RPI)
+add_definitions(-DSIMPLEMQTTSNCLIENTTESTER)
+add_definitions(-DDRIVER_RH_RF95)
+add_definitions(-DFREQUENCY=868)
+add_definitions(-DMODEM_CONFIG_CHOICE=Bw31_25Cr48Sf512)
+
+add_definitions(-DPONG)
 
 include_directories(lib/mqtt-sn-sockets)
 include_directories(lib/mqtt-sn-sockets/lib)
 include_directories(lib/mqtt-sn-sockets/lib/arduino-linux-abstraction/src)
 add_subdirectory(lib/mqtt-sn-sockets/lib/arduino-linux-abstraction/)
 include_directories(lib/mqtt-sn-sockets/RadioHeadRpi)
+#include_directories(lib/mqtt-sn-sockets/RadioHeadRpi/RHutil)
 add_subdirectory(lib/mqtt-sn-sockets)
 
 set(SOURCE_FILES src/main.cpp
 		lib/mqtt-sn-sockets/RadioHeadRpi/RHDatagram.h
-                lib/mqtt-sn-sockets/RadioHeadRpi/RHDatagram.cpp
+		lib/mqtt-sn-sockets/RadioHeadRpi/RHDatagram.cpp
 		lib/mqtt-sn-sockets/RadioHeadRpi/RHGenericDriver.h
 		lib/mqtt-sn-sockets/RadioHeadRpi/RHGenericDriver.cpp
 		lib/mqtt-sn-sockets/RadioHeadRpi/RHGenericSPI.h
@@ -24,6 +30,8 @@ set(SOURCE_FILES src/main.cpp
 		lib/mqtt-sn-sockets/RadioHeadRpi/RHLinuxSPI.cpp
 		lib/mqtt-sn-sockets/RadioHeadRpi/RH_RF95.h
 		lib/mqtt-sn-sockets/RadioHeadRpi/RH_RF95.cpp
+		lib/mqtt-sn-sockets/lib/MqttSnMessageHandler.cpp
+                lib/mqtt-sn-sockets/lib/SimpleMqttSnClientTester.cpp
 )
 
 
